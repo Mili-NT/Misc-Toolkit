@@ -73,16 +73,16 @@ def frequency_analysis(filepath):
             sorted_tuples = sorted(letterfreq_dict.items(), key=lambda x: x[1], reverse=True)
             for tup in sorted_tuples:
                 print(f"{tup[0]} occurs {tup[1]} times.")
-            print('\n')
+                print('\n')
         else:
-            savename = f"{filename}_analysis"
+            savename = f"{filename}_analysis.txt"
             with open(savename, 'w+') as file:
                 letterfreq_dict = letter_analysis()
                 file.write("Letter Frequency Analysis:")
                 sorted_tuples = sorted(letterfreq_dict.items(), key=lambda x: x[1], reverse=True)
                 for tup in sorted_tuples:
                     file.write(f"{tup[0]} occurs {tup[1]} times.")
-                file.write('\n')
+                    file.write('\n')
 
     proccess_and_display()
 
