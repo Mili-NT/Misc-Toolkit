@@ -1,12 +1,13 @@
 import string
-from os import path
+from os import listdir, getcwd, mkdir
+from os.path import isfile, join, isdir
 from concurrent.futures import ThreadPoolExecutor
 
 def file_input():
     def resource_assignment(tc):
         while True:
             finput = input("Enter the path to file (including file extension): ")
-            if path.isfile(finput) is True:
+            if isfile(finput) is True:
                 thread_dict["thread{0}".format(str(tc))] = finput
                 break
             else:
@@ -77,8 +78,10 @@ def frequency_analysis(filepath):
                 print('\n')
         else:
             savename = f"{filename}_analysis.txt"
+            if isdir(getcwd() + '\\AnalyzedDocuments') is False:
+                mkdir(getcwd() + '\\AnalyzedDocuments')
             print(f"Saving to: {savename}")
-            with open(savename, 'w+') as file:
+            with open(getcwd() + '\\AnalyzedDocuments\\' + savename, 'w+') as file:
                 letterfreq_dict = letter_analysis()
                 master_list.append(letterfreq_dict)
                 file.write("Letter Frequency Analysis:\n")
@@ -90,6 +93,49 @@ def frequency_analysis(filepath):
     proccess_and_display()
 
 def post_analysis_calculations():
+    # Abandon all hope, ye who enter here
+    def totaling():
+        # This creates the dictionary with key:value pairs for all uppercase letter and assigns a value of zero
+        mapping = {}
+        for char in string.ascii_uppercase:
+            mapping[char] = 0
+
+        if displaymode == 'save':
+            filepaths = []
+            dirfiles = [f for f in listdir(getcwd() + '\\AnalyzedDocuments') if isfile(join(getcwd() + '\\AnalyzedDocuments', f))]
+            for item in dirfiles:
+                if item.endswith("analysis.txt"):
+                    filepaths.append(getcwd() + '\\AnalyzedDocuments\\' + item)
+                else:
+                    pass
+            for number in range(len(filepaths)):
+                # Open each file
+                for fileobj in filepaths[:number]:
+                    f = open(fileobj)
+                    # read the lines
+                    for lines in f.readlines():
+                        # This if disregards any line that doesnt start with a single letter
+                        if lines[1] != ' ':
+                            pass
+                        else:
+                            # Gets ONLY the numbers in each line, and returns them as a single item list
+                            value = [int(s) for s in lines.split() if s.isdigit()]
+                            for the_one_item in value:
+                                # updates the values for the keys
+                                mapping[lines[:1]] = + the_one_item
+        else:
+            for dictionary in master_list:
+                for key,value in dictionary.items():
+                    mapping[key.upper()] += value
+
+        sorted_tuples = sorted(mapping.items(), key=lambda x: x[1], reverse=True)
+        for tup in sorted_tuples:
+            if displaymode.lower() == 'save':
+                with open(getcwd() + '\\AnalyzedDocuments\\' + "PostAnalysisCalculations.txt", 'a') as savefile:
+                    savefile.write(f"{tup[0]} occurs {tup[1]} times between provided files.\n")
+            else:
+                print(f"{tup[0]} occurs {tup[1]} times between provided files.\n")
+
     averages_dict = {}
     percentages_dict = {}
     total = 0
@@ -105,14 +151,17 @@ def post_analysis_calculations():
         for k,v in averages_dict.items():
             print(f"{k} has a {v} mean occurrence rate\n")
         for k,v in percentages_dict.items():
-            print(f"{k} is {v}% of the provided text.")
+            print(f"{k} is {v}% of the provided text.\n")
+        totaling()
     elif displaymode is 'save':
-        with open("PostAnalysisCalculations.txt", 'w+') as file:
+        with open(getcwd() + '\\AnalyzedDocuments\\' + "PostAnalysisCalculations.txt", 'a') as file:
             for k, v in averages_dict.items():
                 file.write(f"{k} has a {v} mean occurrence rate\n")
-            print('\n\n')
+            file.write('\n')
             for k, v in percentages_dict.items():
                 file.write(f"{k} is {v}% of the provided text.\n")
+            file.write('\n')
+        totaling()
     else:
         print("Error: display mode not set")
 if __name__ == '__main__':
