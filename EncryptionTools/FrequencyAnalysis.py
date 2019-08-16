@@ -3,6 +3,11 @@ from os import listdir, getcwd, mkdir
 from os.path import isfile, join, isdir
 from concurrent.futures import ThreadPoolExecutor
 
+"""
+This analyzes letter frequencies. Written for the KryptonCTF
+"""
+
+
 def file_input():
     def resource_assignment(tc):
         while True:
