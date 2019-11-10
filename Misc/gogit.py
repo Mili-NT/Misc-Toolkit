@@ -4,7 +4,7 @@ import requests
 from subprocess import call
 from bs4 import BeautifulSoup
 
-# TODO: place wget in try/except
+# TODO: place call(cmd) in try/except
 
 #
 # Functions
