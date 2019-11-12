@@ -4,8 +4,6 @@ import requests
 from subprocess import call
 from bs4 import BeautifulSoup
 
-# TODO: place call(cmd) in try/except
-
 #
 # Functions
 #
@@ -60,7 +58,7 @@ def traverse_repo(target, directory_filtering, blacklisted_directories): # Here 
                     full = baseraw + lnk
                     fileaddrs[filename] = full
                 else:
-                    #print(f"Directory: {st['href']}")
+                    print(f"Directory: {st['href']}")
                     if directory_filtering is True:
                         slashcount = 0
                         for character in st['href']:
@@ -72,7 +70,7 @@ def traverse_repo(target, directory_filtering, blacklisted_directories): # Here 
                     else:
                         dirnames.append(st['href'])
         if len(dirnames) == 0:
-            #print("Branch exhausted")
+            print("Branch exhausted")
             pass
         else:
             for subdir in dirnames:
@@ -86,7 +84,10 @@ def traverse_repo(target, directory_filtering, blacklisted_directories): # Here 
 def fetch(fileaddrs, filelist):
     for x in filelist:
         cmd = f"wget {fileaddrs[x]}"
-        call(cmd, shell=True)
+        try:
+            call(cmd, shell=True)
+        except Exception as e:
+            pass
 #
 # Program
 #
