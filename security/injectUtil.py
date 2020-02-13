@@ -17,7 +17,7 @@ def main(target, path):
                  'exploitation':"--priv-esc --os-shell --os-bof",
                  'interactive':"--sqlmap-shell",
                  }
-    tamper = [t for t in input("\033[33mList tamper scripts to enable (if any), delimited by a comma: ").split(",")]
+    tampers = [t for t in input("\033[33mList tamper scripts to enable (if any), delimited by a comma: ").split(",")]
     print("\033[95m --Injection Name: Switches--")
     for x,y in injections.items():
         print(f"\033[94m{x}: \033[92m{y}")
